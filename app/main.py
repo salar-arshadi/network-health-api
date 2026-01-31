@@ -2,16 +2,9 @@ from fastapi import FastAPI
 import psutil
 import socket
 
-from sqlalchemy.orm import Session
-from app.database import engine, SessionLocal
-from app.models import Base, SystemMetric
+from app.api.metrics import router as metrics_router
 
 app = FastAPI(title="Network & System Health API")
-
-
-@app.on_event("startup")
-def on_startup():
-    Base.metadata.create_all(bind=engine)
 
 
 @app.get("/health")
@@ -38,43 +31,5 @@ def network_status():
     }
 
 
-@app.post("/metrics")
-def save_metrics():
-    db: Session = SessionLocal()
-    try:
-        metric = SystemMetric(
-            cpu=psutil.cpu_percent(interval=1),
-            memory=psutil.virtual_memory().percent,
-            disk=psutil.disk_usage("/").percent,
-        )
-
-        db.add(metric)
-        db.commit()
-        db.refresh(metric)
-
-        return {"status": "saved", "id": metric.id}
-    finally:
-        db.close()
-
-
-@app.get("/metrics/latest")
-def latest_metric():
-    db: Session = SessionLocal()
-    try:
-        metric = (
-            db.query(SystemMetric)
-            .order_by(SystemMetric.created_at.desc())
-            .first()
-        )
-
-        if not metric:
-            return {"message": "no data"}
-
-        return {
-            "cpu": metric.cpu,
-            "memory": metric.memory,
-            "disk": metric.disk,
-            "created_at": metric.created_at,
-        }
-    finally:
-        db.close()
+# 👇 register routers
+app.include_router(metrics_router)
