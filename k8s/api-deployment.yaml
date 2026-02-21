@@ -12,6 +12,28 @@ spec:
       labels:
         app: network-health-api
     spec:
+
+      # ----------------------
+      # INIT CONTAINER
+      # ----------------------
+      initContainers:
+        - name: init-db
+          image: network-health-api-api:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - -m
+            - app.scripts.init_db
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: DATABASE_URL
+
+      # ----------------------
+      # MAIN CONTAINER
+      # ----------------------
       containers:
         - name: api
           image: network-health-api-api:latest
@@ -20,19 +42,16 @@ spec:
           ports:
             - containerPort: 8000
 
-          # ----------------------
-          # environment variables
-          # ----------------------
           env:
             - name: DATABASE_URL
-              value: postgresql://postgres:postgres@postgres-db:5432/postgres
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: DATABASE_URL
 
             - name: ENV
               value: "prod"
 
-          # ----------------------
-          # health probes
-          # ----------------------
           livenessProbe:
             httpGet:
               path: /health/live
@@ -47,9 +66,6 @@ spec:
             initialDelaySeconds: 20
             periodSeconds: 10
 
-          # ----------------------
-          # resources
-          # ----------------------
           resources:
             requests:
               cpu: "100m"

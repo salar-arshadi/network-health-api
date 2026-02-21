@@ -3,6 +3,9 @@ import psutil
 import socket
 import asyncio
 
+
+from app.database import engine
+from app import models
 from app.core.logging import setup_logging, get_logger
 from app.core.scheduler import collect_metrics
 from app.api.metrics import router as metrics_router
@@ -33,6 +36,10 @@ async def on_startup():
     global scheduler_task
 
     logger.info("API startup completed")
+    
+    # 🔥 ensure database tables exist
+#    models.Base.metadata.create_all(bind=engine)
+#    logger.info("Database tables ensured")
 
     # start background scheduler
     scheduler_task = asyncio.create_task(
