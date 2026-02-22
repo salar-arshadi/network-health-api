@@ -22,7 +22,7 @@ This project demonstrates hands-on experience with Docker, Kubernetes, autoscali
 
 ## 🧱 Architecture Overview
 
-FastAPI → Docker Image → Kubernetes Deployment → Service → InitContainer → Metrics Server → HPA
+FastAPI → Docker → Kubernetes Deployment → Service → HPA → Metrics Server
 
 Designed to simulate real-world containerized infrastructure environments.
 
@@ -110,17 +110,8 @@ kubectl get hpa
 - CPU-based Horizontal Pod Autoscaling configured
 - Health endpoints integrated with liveness & readiness probes
 - Metrics Server troubleshooting handled (ImagePull & cluster config issues)
-- Resource requests & limits for controlled scaling
+
 ---
-
-
-## ⚙️ Real-World Challenges Solved
-
-- Resolved Metrics Server ImagePullBackOff in restricted network environment
-- Implemented manual image mirroring inside Minikube Docker
-- Configured insecure kubelet TLS for local cluster compatibility
-- Debugged InitContainer startup failures
-
 
 ## 🧠 Engineering Focus
 
@@ -138,3 +129,4 @@ This project emphasizes:
 
 Metrics reflect container-level resources.
 Designed as a foundation for cloud-native observability systems.
+
