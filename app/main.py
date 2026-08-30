@@ -79,7 +79,7 @@ tags_metadata = [
 
 app = FastAPI(
 
-    title="Zitel Data Center Operations Platform API",
+    title="Zitel Data Center Operations Platform AAPI",
 
     description="""
 REST API for Zitel Data Center Operations Platform.

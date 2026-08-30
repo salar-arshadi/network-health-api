@@ -1,48 +1,51 @@
 import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
+    Routes,
+    Route,
+    Navigate,
 } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import DatacenterPage from "./pages/DatacenterPage";
 
+import ProtectedRoute from "./routes/ProtectedRoute";
+
 export default function App() {
 
-  return (
+    return (
 
-    <BrowserRouter>
+        <Routes>
 
-      <Routes>
+            <Route
+                path="/"
+                element={<HomePage />}
+            />
 
-        <Route
-          path="/"
-          element={<HomePage />}
-        />
+            <Route
+                path="/login"
+                element={<LoginPage />}
+            />
 
-        <Route
-          path="/login"
-          element={<LoginPage />}
-        />
+            <Route
+                path="/datacenter"
+                element={
 
-        <Route
-          path="/datacenter"
-          element={<DatacenterPage />}
-        />
+                    <ProtectedRoute>
 
-        {/* Catch unknown routes */}
+                        <DatacenterPage />
 
-        <Route
-          path="*"
-          element={<Navigate to="/" replace />}
-        />
+                    </ProtectedRoute>
 
-      </Routes>
+                }
+            />
 
-    </BrowserRouter>
+            <Route
+                path="*"
+                element={<Navigate to="/" replace />}
+            />
 
-  );
+        </Routes>
+
+    );
 
 }

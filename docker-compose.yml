@@ -1,4 +1,3 @@
-
 services:
   postgres-db:
     image: postgres:15
@@ -18,12 +17,16 @@ services:
   api:
     build: .
     container_name: network-health-api
+
     ports:
       - "8000:8000"
+
     env_file:
       - .env
 
-    # ⛑ Docker HEALTHCHECK (connected to FastAPI)
+    volumes:
+      - .:/app
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/ready"]
       interval: 30s
@@ -35,14 +38,12 @@ services:
       postgres-db:
         condition: service_healthy
 
-
   test-linux-server:
     build:
       context: ./test-server
     container_name: test-linux-server
     ports:
       - "2222:22"
+
 volumes:
   postgres_data:
-
-
