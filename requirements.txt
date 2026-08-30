@@ -1,7 +1,15 @@
 fastapi
 uvicorn
 psutil
+
 sqlalchemy>=2.0
 psycopg2-binary
 python-dotenv
+
 alembic
+
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
+
+paramiko

@@ -1,15 +1,13 @@
-import os
-from sqlalchemy import create_engine
-from app.models import Base
+from app.database import engine
+from app.models import *
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+from sqlalchemy.orm import configure_mappers
 
-if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL is not set")
+configure_mappers()
 
-engine = create_engine(DATABASE_URL)
+from app.database import Base
 
-print("🟢 Creating database tables if not exist...")
 Base.metadata.create_all(bind=engine)
-print("✅ Database initialized successfully")
+
+print("Database initialized.")
 

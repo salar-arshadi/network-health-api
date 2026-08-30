@@ -1,4 +1,3 @@
-version: "3.9"
 
 services:
   postgres-db:
@@ -36,6 +35,14 @@ services:
       postgres-db:
         condition: service_healthy
 
+
+  test-linux-server:
+    build:
+      context: ./test-server
+    container_name: test-linux-server
+    ports:
+      - "2222:22"
 volumes:
   postgres_data:
+
 
